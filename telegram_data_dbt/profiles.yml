@@ -1,0 +1,13 @@
+telegram_data_dbt: # This is the name of your dbt project (defined in dbt_project.yml)
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost # When running dbt locally, connect to localhost where Docker maps port 5432
+      port: 5432
+      user: "{{ env_var('POSTGRES_USER') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD') }}"
+      dbname: "{{ env_var('POSTGRES_DB') }}"
+      schema: raw
+      threads: 4
+      # search_path: "raw" # Add raw to search path if you want to directly reference raw tables without 'raw.' prefix

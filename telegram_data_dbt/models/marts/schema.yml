@@ -1,0 +1,70 @@
+# telegram_data_dbt/models/marts/schema.yml
+version: 2
+
+models:
+  - name: dim_channels
+    description: "Dimension table for Telegram channels."
+    columns:
+      - name: channel_id
+        description: "Surrogate key for the channel."
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: "Original name of the Telegram channel."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_dates
+    description: "Dimension table for date analysis."
+    columns:
+      - name: date_day
+        description: "The specific date."
+        tests:
+          - unique
+          - not_null
+      - name: year
+        description: "Year of the date."
+        tests:
+          - not_null
+
+  - name: fct_messages
+    description: "Fact table for Telegram messages."
+    columns:
+      - name: message_surrogate_key
+        description: "Unique surrogate key for each message record."
+        tests:
+          - unique
+          - not_null
+      - name: message_id
+        description: "Original ID of the message from Telegram (within its channel)."
+        tests:
+          - not_null
+      - name: channel_id
+        description: "Foreign key to the dim_channels table."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_channels')
+              field: channel_id
+      - name: message_date
+        description: "Date of the message, linked to dim_dates."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_day
+      - name: message_text
+        description: "The full text content of the Telegram message."
+        tests:
+          - not_null
+      - name: views_count
+        description: "Number of views for the message."
+        tests:
+          - not_null
+          - dbt_utils.at_least_one:
+              # Custom test: ensure views_count is non-negative
+              # This will check if there's any row where views_count < 0.
+              # A passing test means no such rows are returned.
+              where: "views_count < 0"

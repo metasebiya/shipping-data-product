@@ -6,3 +6,7 @@ venv
 #Environment Variable
 .env
 
+#logs and session
+/scripts/logs/
+/scripts/*.session
+/scripts/*.log

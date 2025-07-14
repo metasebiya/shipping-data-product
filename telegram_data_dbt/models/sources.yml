@@ -1,0 +1,28 @@
+# telegram_data_dbt/models/sources.yml
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('POSTGRES_DB') }}"
+    schema: raw
+    tables:
+      - name: telegram_messages
+        description: "Raw messages scraped from Telegram channels, stored as JSONB."
+        columns:
+          - name: id
+            description: "Primary key for the raw message record."
+            tests:
+              - unique
+              - not_null
+          - name: channel_name
+            description: "Name of the Telegram channel."
+            tests:
+              - not_null
+          - name: message_date
+            description: "Date the message was scraped."
+            tests:
+              - not_null
+          - name: message_json
+            description: "Full raw JSON object of the Telegram message."
+            tests:
+              - not_null
