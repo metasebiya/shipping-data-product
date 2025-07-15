@@ -1,0 +1,6 @@
+# workspace.yaml
+load_from:
+  - python_file:
+      path: dagster_pipeline/assets.py
+      path: dagster_pipeline/jobs.py
+      path: dagster_pipeline/__init__.py
