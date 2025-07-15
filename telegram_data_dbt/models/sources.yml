@@ -26,3 +26,26 @@ sources:
             description: "Full raw JSON object of the Telegram message."
             tests:
               - not_null
+      - name: image_detections
+        description: "Raw object detection results from YOLOv8."
+        columns:
+          - name: id
+            description: "Primary key for the raw detection record."
+            tests:
+              - unique
+              - not_null
+          - name: image_path
+            description: "Full path to the detected image file."
+            tests:
+              - not_null
+          - name: detected_class
+            description: "Class name of the detected object (e.g., 'person', 'car', 'pill')."
+            tests:
+              - not_null
+          - name: confidence_score
+            description: "Confidence score of the detection (0-1)."
+            tests:
+              - not_null
+              - dbt_utils.at_least_one:
+                  where: "confidence_score < 0 OR confidence_score > 1"
+                  severity: error 
