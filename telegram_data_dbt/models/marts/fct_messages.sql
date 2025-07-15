@@ -1,8 +1,7 @@
--- models/marts/fct_messages.sql
 {{ config(
-    materialized='incremental', -- Use incremental materialization for fact table
+    materialized='incremental',
     unique_key='message_surrogate_key',
-    on_schema_change='append_new_columns' -- Useful for handling schema evolution gracefully
+    on_schema_change='append_new_columns'
 ) }}
 
 WITH stg_messages AS (
